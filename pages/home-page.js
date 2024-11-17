@@ -26,7 +26,7 @@ export const HomePage = {
                     <div class="carousel-inner">
                         <div class="carousel-item" v-for="(movie, index) in topRevenueMovies" :class="{ active: index === 0 }"
                             :key="movie.id">
-                            <div class="d-flex justify-content-center">
+                            <div class="d-flex justify-content-center" @click="clickMovie(movie.id)">
                                 <img class="revenueItemImg" :src="movie.image" class="d-block w-30" :alt="movie.fullTitle">
                                 <div class="movie-info movie-overlay mt-3" >
                                     <h4>{{ movie?.fullTitle }}</h4>
@@ -50,7 +50,7 @@ export const HomePage = {
                         <div class="carousel-item top-rating-caursol-item" v-for="(chunk, chunkIndex) in chunkMovies(mostPopularMovies)"
                             :class="{ active: chunkIndex === 0 }" :key="chunkIndex">
                             <div class="d-flex justify-content-around">
-                                <div v-for="(movie, index) in chunk" :key="movie.id" class="top-rating-movie-item">
+                                <div v-for="(movie, index) in chunk" :key="movie.id" class="top-rating-movie-item" @click="clickMovie(movie.id)">
                                     <img :src="movie.image" class="d-block w-30" :alt="movie.fullTitle">
                                     <div class="mt-3 movie-info-popup">
                                         <h4>{{ movie?.fullTitle }}</h4>
@@ -74,7 +74,7 @@ export const HomePage = {
                         <div class="carousel-item top-rating-caursol-item" v-for="(chunk, chunkIndex) in chunkMovies(topRatingMovies)"
                             :class="{ active: chunkIndex === 0 }" :key="chunkIndex">
                             <div class="d-flex justify-content-around">
-                                <div v-for="(movie, index) in chunk" :key="movie.id" class="top-rating-movie-item">
+                                <div v-for="(movie, index) in chunk" :key="movie.id" class="top-rating-movie-item" @click="clickMovie(movie.id)">
                                     <img :src="movie.image" class="d-block w-30" :alt="movie.fullTitle">
                                     <div class=" mt-3 movie-info-popup" >
                                         <h4>{{ movie?.fullTitle }}</h4>
@@ -143,6 +143,9 @@ export const HomePage = {
       } finally {
         this.loading = false;
       }
+    },
+    clickMovie(movieId) {
+      this.$router.push(`/movies/${movieId}`);
     },
   },
 };

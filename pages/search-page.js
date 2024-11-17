@@ -3,7 +3,7 @@ export const SearchPage = {
              <div class="container-body container">
                 <div class="row">
                     <div class="col-12 col-sm-6 col-md-4 col-lg-3 mb-4" v-for="(movie, index) in paginatedMovies" :key="movie.id">
-                        <div class="item-search-container">
+                        <div class="item-search-container" @click="clickMovie(movie.id)">
                             <img :src="movie.image" alt="Movie Image" />
                             <div class="info-card">
                                 <h4>{{ movie.fullTitle }}</h4>
@@ -87,6 +87,9 @@ export const SearchPage = {
     },
     homeRedirect() {
       this.$router.push({ path: "/" });
+    },
+    clickMovie(movieId) {
+      this.$router.push(`/movies/${movieId}`);
     },
   },
   watch: {

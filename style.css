@@ -239,10 +239,8 @@ input:checked + .slider:before {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  align-items: flex-start;
   padding: 20px;
   margin-top: 20px;
-  background-color: #f9f9f9;
   border-radius: 10px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
@@ -261,12 +259,10 @@ input:checked + .slider:before {
   padding: 10px 0;
   font-size: 16px;
   line-height: 1.5;
-  color: #333;
 }
 
 .basic-information-item h4 {
   font-weight: 600;
-  color: #444;
   margin-right: 10px;
   text-transform: uppercase;
 }
@@ -275,7 +271,6 @@ input:checked + .slider:before {
   margin: 0;
   flex: 1;
   font-style: italic;
-  color: #555;
 }
 
 .revenueItemImg {
@@ -287,26 +282,24 @@ input:checked + .slider:before {
 }
 
 .basic-information-container img {
+  margin-right: 10px;
   max-width: 100%;
   border-radius: 8px;
-  object-fit: contain;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 .basic-information-item p {
-  color: #666;
   word-wrap: break-word;
 }
 
 .basic-information-item h4 {
   font-size: 18px;
   font-weight: 600;
-  color: #333;
 }
 .checked {
   color: orange;
 }
-.container-body h3 {
+.container-body h2 {
   margin-top: 20px;
 }
 .review-container {
@@ -344,4 +337,68 @@ input:checked + .slider:before {
     width: 300px;
     margin-bottom: 20px;
   }
+}
+.cast-movies-container {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 30px;
+}
+
+.cast-movies-item {
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  transition: all 0.3s ease-in-out;
+}
+
+.cast-movies-item:hover {
+  transform: scale(1.05);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+.cast-movies-item h2 {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 15px;
+}
+
+.cast-movie-item-content {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 20px;
+  margin-bottom: 20px;
+}
+
+.cast-movie-item-content img {
+  max-width: 150px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.info-card {
+  flex: 1;
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+}
+
+.info-card h4 {
+  font-size: 20px;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.info-card p {
+  font-size: 14px;
+  margin: 5px 0;
+}
+.cast-movies-item p {
+  font-size: 16px;
+  margin-top: 10px;
+}
+.cast-movies-container .active {
+  border-left: 5px solid #3498db;
+  padding-left: 15px;
 }
