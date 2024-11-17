@@ -38,15 +38,28 @@
                         <button id="search-button" @click="searchMovies" class="btn-search">Search</button>
                     </div>
                 </div>
+                <div class="container-body container">
+                    <div class="row">
+                        <div class="col-12 col-sm-6 col-md-4 col-lg-3 mb-4" v-for="(movie, index) in movies" :key="movie.id">
+                            <div class="item-search-container">
+                                <img :src="movie.image" alt="Movie Image" />
+                                <div class="info-card">
+                                    <h4>{{ movie.fullTitle }}</h4>
+                                    <p>Animation, Adventure, Drama</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <router-view></router-view>
+     
            
             </div>
         </div>
     </div>
  
     <script>
-
+        let searchQuery = "";
 
         const HomePage = {
                 data() {
@@ -177,19 +190,19 @@
                         this.loading = false;
                     }
                 },
-                    async fetchMovies() {
-                    this.loading = true;
-                    const url = "http://matuan.online:2422/api/Movies";
-                    try {
-                        const data = await callApi(url, "GET");
-                        this.movies = data;
-                        this.topRevenueMovies = this.movies.sort((a, b) => a.imDbRatingCount - b.imDbRatingCount).slice(0, 5);
-                    } catch (error) {
-                        this.error = error;
-                        console.error("Có lỗi xảy ra khi lấy dữ liệu:", error);
-                    } finally {
-                        this.loading = false;
-                    }
+                async  fetchMovies() {
+                this.loading = true;
+                const url = "http://matuan.online:2422/api/Movies";
+                try {
+                const data = await callApi(url, "GET");
+                this.movies = data;
+                this.topRevenueMovies = this.movies.sort((a,b) => a.imDbRatingCount - b.imDbRatingCount).slice(0, 5);
+                } catch(error) {
+                this.error = error;
+                console.error("Có lỗi xảy ra khi lấy dữ liệu:", error);
+                } finally {
+                this.loading = false;
+                }
                 },
                 
             },
@@ -240,18 +253,17 @@
                     error: null,
                     darkMode: false,
                     movies: [],
-                    topRevenueMovies: [],
                     searchQuery: "",
-                    topRatingMovies:[],
-                    participants: [],
-                    reviews: [],
-                    mostPopularMovies: [],
+                    page: 1,
+                    per_page: 6,
                 };
             },
               created() {
-                this.fetchMostPopularMovies();
-                this.fetchTop50Movies();
                 this.fetchMovies();
+                this.page = this.$route.query.page || 1;
+                this.per_page = this.$route.query.per_page || 6;
+                this.searchQuery = this.$route.query.searchQuery || "";
+                this.searchMovies(this.searchQuery, this.page, this.per_page);
             },
             methods: {
                  toggleDarkMode() {
@@ -276,21 +288,30 @@
                         document.getElementById("icon-home").classList.remove("icon-dark-mode");
                          document.getElementById("icon-home").setAttribute("src", "icons/icons8-home.svg");
                     }
+                }, 
+                debounce(func, delay) {
+                    let timeout;
+                    return (...args) => {
+                        clearTimeout(timeout);
+                        timeout = setTimeout(() => func(...args), delay);
+                    };
                 },
                 searchMovies() {
-                },
-                chunkMovies(array) {
-                    let size = 3; 
-                    return Array.from({ length: Math.ceil(array.length / size) }, (_, index) =>
-                        array.slice(index * size, index * size + size)
+                    const query = this.searchQuery.toLowerCase();
+                    this.filteredMovies = this.movies.filter(
+                        movie =>
+                            movie.fullTitle.toLowerCase().includes(query) ||
+                            (movie.actorList || []).some(actor =>
+                                actor.name.toLowerCase().includes(query)
+                            )
                     );
                 },
-                async fetchParticipants() {
+                async fetchMovies() {
                     this.loading = true;
-                    const url = "http://matuan.online:2422/api/Names";
+                    const url = "http://matuan.online:2422/api/Movies";
                     try {
                         const data = await callApi(url, "GET");
-                        this.participants = data;
+                        this.movies = data;
                     } catch (error) {
                         this.error = error;
                         console.error("Có lỗi xảy ra khi lấy dữ liệu:", error);
@@ -298,18 +319,13 @@
                         this.loading = false;
                     }
                 },
-                 async fetchReviews() {
-                    this.loading = true;
-                    const url = "http://matuan.online:2422/api/Reviews";
-                    try {
-                        const data = await callApi(url, "GET");
-                        this.reviews = data;
-                    } catch (error) {
-                        this.error = error;
-                        console.error("Có lỗi xảy ra khi lấy dữ liệu:", error);
-                    } finally {
-                        this.loading = false;
-                    }
+                watch: {
+                    searchQuery: {
+                        handler: function (newQuery) {
+                            this.debounce(this.searchMovies, 300)(newQuery);
+                        },
+                        immediate: true,
+                    },
                 },
                 
             },

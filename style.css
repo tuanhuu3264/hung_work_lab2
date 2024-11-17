@@ -180,6 +180,7 @@ input:checked + .slider:before {
   background: white;
 }
 .footer {
+  margin-top: 20px;
   width: 100%;
   height: 30px;
   background: #f2dad8;
@@ -196,7 +197,41 @@ input:checked + .slider:before {
   color: #c7807e;
   border: 1px solid #c7807e;
 }
-.revenueItemImg{
-  witdh:600px;
-  height:800px;
+.revenueItemImg {
+  witdh: 600px;
+  height: 800px;
+}
+.item-search-container {
+  border-radius: 5px;
+  border: 1px solid #c0c0c0;
+  overflow: hidden;
+  background-color: #fff;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  height: 100%;
+}
+
+.item-search-container:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.item-search-container img {
+  width: 100%;
+  height: auto;
+}
+
+.info-card {
+  padding: 10px;
+  text-align: center;
+}
+
+.info-card h4 {
+  font-size: 16px;
+  font-weight: bold;
+  margin: 8px 0;
+}
+
+.info-card p {
+  font-size: 14px;
+  color: #888;
 }
