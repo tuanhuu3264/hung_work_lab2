@@ -402,3 +402,9 @@ input:checked + .slider:before {
   border-left: 5px solid #3498db;
   padding-left: 15px;
 }
+.header-change-mode {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  gap: 10px;
+}

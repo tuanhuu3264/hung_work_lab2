@@ -63,8 +63,6 @@ export const DetailActorPage = {
         (_, index) => array.slice(index * size, index * size + size)
       );
     },
-
-    // Fetch Movies
     async fetchMovies() {
       this.loading = true;
       const url = "http://matuan.online:2422/api/Movies";

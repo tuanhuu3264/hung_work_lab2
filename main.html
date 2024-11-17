@@ -28,7 +28,7 @@
                             <input type="checkbox" id="modeToggle"  v-model="darkMode" @change="toggleDarkMode">
                             <span class="slider"></span>
                         </label>
-                        </label>
+                        <img id="icon-change-mode" src="icons/sun-svgrepo-com.svg" alt="icon-sun" id="icon-sun" style="width: 24px; height: 24px;" />
                     </div>
                 </div>
                 <div id="nav" class="container-nav">
@@ -87,6 +87,7 @@
                         document.getElementById("search-button").classList.add("btn-search-dark");
                         document.getElementById("search-text").classList.add("search-text-dark");
                         document.getElementById("icon-home").setAttribute("src", "icons/icons8-home-white.svg");
+                         document.getElementById("icon-change-mode").setAttribute("src", "icons/moon-svgrepo-com.svg");
 
                     } else {
                         document.body.classList.remove('dark-mode');
@@ -98,6 +99,7 @@
                         document.getElementById("search-text").classList.remove("search-text-dark");
                         document.getElementById("icon-home").classList.remove("icon-dark-mode");
                          document.getElementById("icon-home").setAttribute("src", "icons/icons8-home.svg");
+                          document.getElementById("icon-change-mode").setAttribute("src", "icons/sun-svgrepo-com.svg");
                     }
                 }, 
                 searchMovies() {
