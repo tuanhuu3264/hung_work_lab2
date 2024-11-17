@@ -32,200 +32,116 @@
                     </div>
                 </div>
                 <div id="nav" class="container-nav">
-                    <img src="icons/icons8-home.svg" alt="icon-home" id="icon-home" style="width: 24px;" />
+                    <img src="icons/icons8-home.svg" @click="homeRedirect" alt="icon-home" id="icon-home" style="width: 24px;" />
                     <div class="search-tool">
                         <input id="search-text" type="text" placeholder="Search movies..." v-model="searchQuery" />
                         <button id="search-button" @click="searchMovies" class="btn-search">Search</button>
                     </div>
                 </div>
-                <div class="container-body container">
-                    <div class="row">
-                        <div class="col-12 col-sm-6 col-md-4 col-lg-3 mb-4" v-for="(movie, index) in movies" :key="movie.id">
-                            <div class="item-search-container">
-                                <img :src="movie.image" alt="Movie Image" />
-                                <div class="info-card">
-                                    <h4>{{ movie.fullTitle }}</h4>
-                                    <p>Animation, Adventure, Drama</p>
+            </div>
+            
+            <div class="container-body">
+                <div>
+                    <div v-if="loading">Loading...</div>
+                    <div v-else-if="error">{{ error }}</div>
+                    <div v-else>
+                       <div class="basic-information-container">
+                        <img class="revenueItemImg" :src="movie.image" class="d-block w-30" :alt="movie.fullTitle">
+                        <div class="basic-information">
+                            <div class="basic-information-item">
+                                <h4>Full Title:</h4>
+                                <p>{{ movie?.fullTitle}}</p>
+                            </div>
+                            <div class="basic-information-item">
+                                <h4>Genre: </h4>
+                                <p>{{ movie?.genre}}</p>
+                            </div>
+                            <div class="basic-information-item">
+                                <h4>Directors: </h4>
+                                <p>{{ movie?.directors}}</p>
+                            </div>
+                            <div class="basic-information-item">
+                                <h4>Writers: </h4>
+                                <p>{{ movie?.writers}}</p>
+                            </div>
+                            <div class="basic-information-item">
+                                <h4>Release Date: </h4>
+                                <p>{{ movie?.releaseDate}}</p>
+                            </div>
+                            <div class="basic-information-item">
+                                <h4>Run Time: </h4>
+                                <p>{{ movie?.runtimeStr}}</p>
+                            </div>
+                            <div class="basic-information-item">
+                                <h4>Plot: </h4>
+                                <p>{{ movie?.plot}}</p>
+                            </div>
+                            <div class="basic-information-item">
+                                <h4>Companies: </h4>
+                                <p>{{ movie?.companies}}</p>
+                            </div>
+                            <div class="basic-information-item">
+                                <h4>Languages: </h4>
+                                <p>{{ movie?.languages}}</p>
+                            </div>
+                        </div>
+                       </div>
+
+                       <h3>Actors</h3>
+                        
+                    <div id="actorCarousel" class="carousel slide" data-ride="carousel">
+                        <div class="carousel-inner top-rating-caursol-inner">
+                            <div class="carousel-item top-rating-caursol-item" v-for="(chunk, chunkIndex) in chunkActors(actors)"
+                                :class="{ active: chunkIndex === 0 }" :key="chunkIndex">
+                                <div class="d-flex justify-content-around">
+                                    <div v-for="(actor, index) in chunk" :key="actor.id" class="top-rating-movie-item">
+                                        <img :src="actor.image" class="d-block w-30" :alt="actor.name">
+                                        <div class=" mt-3">
+                                            <h4>{{ actor?.name }}</h4>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
+                        <a class="carousel-control-prev" href="#actorCarousel" role="button" data-slide="prev">
+                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                            <span class="sr-only">Previous</span>
+                        </a>
+                        <a class="carousel-control-next" href="#actorCarousel" role="button" data-slide="next">
+                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                            <span class="sr-only">Next</span>
+                        </a>
                     </div>
-                </div>
-            </div>
-     
-           
+                    
+                     <h3>Reviews</h3>
+                      <div>
+                        <div class="review-container" v-for="(review, index) in reviews" :class="{ active: index === 0 }" :key="review.id">
+                            <div class="review-item">
+                                <p><span>{{ review.username }}</span> - {{ review.date }}</p>
+                                <h2>{{ review.title }}</h2> 
+                                <div class="star-rating">
+                                    <span class="star fa fa-star" :class="{'checked': review.rate >= 2}"></span>
+                                    <span class="star fa fa-star" :class="{'checked': review.rate >= 4}"></span>
+                                    <span class="star fa fa-star" :class="{'checked': review.rate >= 6}"></span>
+                                    <span class="star fa fa-star" :class="{'checked': review.rate >= 8}"></span>
+                                    <span class="star fa fa-star" :class="{'checked': review.rate >= 10}"></span>
+                                </div>
+                                <p>{{ review.content }}</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    </div>
             </div>
         </div>
     </div>
  
-    <script>
+    <script type="module">
+        import { HomePage } from './pages/home-page.js';
+        import { SearchPage } from './pages/search-page.js';
         let searchQuery = "";
-
-        const HomePage = {
-                data() {
-                return {
-                    loading: true,
-                    error: null,
-                    darkMode: false,
-                    movies: [],
-                    topRevenueMovies: [],
-                    searchQuery: "",
-                    topRatingMovies: [],
-                    participants: [],
-                    reviews: [],
-                    mostPopularMovies: [],
-                 };
-                },
-                created() {
-                this.fetchMostPopularMovies();
-                this.fetchTop50Movies();
-                this.fetchMovies();
-                 },
-                template: ` <div class="container-body">
-                <div>
-                <div v-if="loading">Loading...</div>
-                <div v-else-if="error">{{ error }}</div>
-                <div id="movieCarousel" class="carousel slide" data-ride="carousel">
-                    <div class="carousel-inner">
-                        <div class="carousel-item" v-for="(movie, index) in topRevenueMovies" :class="{ active: index === 0 }"
-                            :key="movie.id">
-                            <div class="d-flex justify-content-center">
-                                <img class="revenueItemImg" :src="movie.image" class="d-block w-30" :alt="movie.fullTitle">
-                                <div class="movie-info movie-overlay mt-3" >
-                                    <h4>{{ movie?.fullTitle }}</h4>
-                                    <p>{{ movie?.genre}}</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <a class="carousel-control-prev" href="#movieCarousel" role="button" data-slide="prev">
-                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                        <span class="sr-only">Previous</span>
-                    </a>
-                    <a class="carousel-control-next" href="#movieCarousel" role="button" data-slide="next">
-                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                        <span class="sr-only">Next</span>
-                    </a>
-                </div>
-                <h3 class="title-caursol">Most Popular</h3>
-                <div id="movieMostPopularCarousel" class="carousel slide" data-ride="carousel">
-                    <div class="carousel-inner top-rating-caursol-inner">
-                        <div class="carousel-item top-rating-caursol-item" v-for="(chunk, chunkIndex) in chunkMovies(mostPopularMovies)"
-                            :class="{ active: chunkIndex === 0 }" :key="chunkIndex">
-                            <div class="d-flex justify-content-around">
-                                <div v-for="(movie, index) in chunk" :key="movie.id" class="top-rating-movie-item">
-                                    <img :src="movie.image" class="d-block w-30" :alt="movie.fullTitle">
-                                    <div class="mt-3 movie-info-popup">
-                                        <h4>{{ movie?.fullTitle }}</h4>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <a class="carousel-control-prev" href="#movieMostPopularCarousel" role="button" data-slide="prev">
-                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                        <span class="sr-only">Previous</span>
-                    </a>
-                    <a class="carousel-control-next" href="#movieMostPopularCarousel" role="button" data-slide="next">
-                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                        <span class="sr-only">Next</span>
-                    </a>
-                </div>
-                <h3 class="title-caursol">Top Rating</h3>
-                <div id="movieRatingCarousel" class="carousel slide" data-ride="carousel">
-                    <div class="carousel-inner top-rating-caursol-inner">
-                        <div class="carousel-item top-rating-caursol-item" v-for="(chunk, chunkIndex) in chunkMovies(topRatingMovies)"
-                            :class="{ active: chunkIndex === 0 }" :key="chunkIndex">
-                            <div class="d-flex justify-content-around">
-                                <div v-for="(movie, index) in chunk" :key="movie.id" class="top-rating-movie-item">
-                                    <img :src="movie.image" class="d-block w-30" :alt="movie.fullTitle">
-                                    <div class=" mt-3 movie-info-popup" >
-                                        <h4>{{ movie?.fullTitle }}</h4>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <a class="carousel-control-prev" href="#movieRatingCarousel" role="button" data-slide="prev">
-                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                        <span class="sr-only">Previous</span>
-                    </a>
-                    <a class="carousel-control-next" href="#movieRatingCarousel" role="button" data-slide="next">
-                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                        <span class="sr-only">Next</span>
-                    </a>
-                </div>
-            </div>`,
-            methods:{
-                chunkMovies(array) {
-                    let size = 3;
-                    return Array.from({ length: Math.ceil(array.length / size) }, (_, index) =>
-                        array.slice(index * size, index * size + size)
-                    );
-                },
-                async fetchTop50Movies() {
-                    this.loading = true;
-                    const url = "http://matuan.online:2422/api/Top50Movies";
-                    try {
-                        const data = await callApi(url, "GET");
-                        this.topRatingMovies = data.slice(0, 30);;
-                    } catch (error) {
-                        this.error = error;
-                        console.error("Có lỗi xảy ra khi lấy dữ liệu:", error);
-                    } finally {
-                        this.loading = false;
-                    }
-                },
-
-                async fetchMostPopularMovies() {
-                    this.loading = true;
-                    const url = "http://matuan.online:2422/api/MostPopularMovies";
-                    try {
-                        const data = await callApi(url, "GET");
-                        this.mostPopularMovies = data.slice(0, 30);;
-                    } catch (error) {
-                        this.error = error;
-                        console.error("Có lỗi xảy ra khi lấy dữ liệu:", error);
-                    } finally {
-                        this.loading = false;
-                    }
-                },
-                async  fetchMovies() {
-                this.loading = true;
-                const url = "http://matuan.online:2422/api/Movies";
-                try {
-                const data = await callApi(url, "GET");
-                this.movies = data;
-                this.topRevenueMovies = this.movies.sort((a,b) => a.imDbRatingCount - b.imDbRatingCount).slice(0, 5);
-                } catch(error) {
-                this.error = error;
-                console.error("Có lỗi xảy ra khi lấy dữ liệu:", error);
-                } finally {
-                this.loading = false;
-                }
-                },
-                
-            },
-            };
-
-        const SearchPage = {
-            template: `
-              <div>
-                <h1>Search Results</h1>
-                <ul>
-                  <li v-for="(item, index) in filteredItems" :key="index">{{ item }}</li>
-                </ul>
-              </div>
-            `,
-            data() {
-                return {
-                    searchQuery: "",
-                    items: ["Inception", "Interstellar", "Avengers", "The Dark Knight"]
-                };
-            },
-           
-        };
-
+        const homePage = HomePage;
+        const searchPage = SearchPage;
         const DetailPage = {
             template: `
               <div>
@@ -234,10 +150,9 @@
               </div>
             `
         };
-
         const routes = [
-            { path: "/", component: HomePage },
-            { path: "/search", component: SearchPage },
+            { path: "/", component: homePage },
+            { path: "/search", component: searchPage },
             { path: "/detail/:id", component: DetailPage }
         ];
 
@@ -252,18 +167,15 @@
                     loading: true,
                     error: null,
                     darkMode: false,
+                    actors: [],
                     movies: [],
-                    searchQuery: "",
-                    page: 1,
-                    per_page: 6,
+                    movie: {},
+                    reviews: [],
                 };
             },
-              created() {
+            created() {
                 this.fetchMovies();
-                this.page = this.$route.query.page || 1;
-                this.per_page = this.$route.query.per_page || 6;
-                this.searchQuery = this.$route.query.searchQuery || "";
-                this.searchMovies(this.searchQuery, this.page, this.per_page);
+                this.fetchReviews();
             },
             methods: {
                  toggleDarkMode() {
@@ -289,21 +201,20 @@
                          document.getElementById("icon-home").setAttribute("src", "icons/icons8-home.svg");
                     }
                 }, 
-                debounce(func, delay) {
-                    let timeout;
-                    return (...args) => {
-                        clearTimeout(timeout);
-                        timeout = setTimeout(() => func(...args), delay);
-                    };
-                },
                 searchMovies() {
-                    const query = this.searchQuery.toLowerCase();
-                    this.filteredMovies = this.movies.filter(
-                        movie =>
-                            movie.fullTitle.toLowerCase().includes(query) ||
-                            (movie.actorList || []).some(actor =>
-                                actor.name.toLowerCase().includes(query)
-                            )
+                    this.$router.push({ path: '/search', query: { searchQuery: this.searchQuery } });
+                },
+                 homeRedirect() {
+                    this.$router.push({ path: '/' });
+                },
+                searchMoviesReplace() {
+                    this.$router.replace({ path: this.$route.path, query: { searchQuery: this.searchQuery } });
+                },
+                chunkActors(array) {
+                    let size = 3;
+                    return Array.from(
+                        { length: Math.ceil(array?.length / size) },
+                        (_, index) => array.slice(index * size, index * size + size)
                     );
                 },
                 async fetchMovies() {
@@ -312,6 +223,19 @@
                     try {
                         const data = await callApi(url, "GET");
                         this.movies = data;
+                        const movieData = this.movies.find((movie) => movie.id === "tt0012349");
+
+                        if (movieData) {
+                            this.movie = {
+                                ...movieData,
+                                genre: Array.isArray(movieData.genreList) ? movieData.genreList.map((genre) => genre.value).join(", ") : '',
+                                actors: movieData.actorList || [],
+                                directors: Array.isArray(movieData.directorList) ? movieData.directorList.map((director) => director.name).join(", ") : '',
+                                writers: Array.isArray(movieData.writerList) ? movieData.writerList.map((writer) => writer.name).join(", ") : '',
+                            };
+                            this.actors = this.movie.actors;
+                   
+                        }
                     } catch (error) {
                         this.error = error;
                         console.error("Có lỗi xảy ra khi lấy dữ liệu:", error);
@@ -319,15 +243,29 @@
                         this.loading = false;
                     }
                 },
-                watch: {
-                    searchQuery: {
-                        handler: function (newQuery) {
-                            this.debounce(this.searchMovies, 300)(newQuery);
-                        },
-                        immediate: true,
-                    },
+                 async fetchReviews() {
+                    this.loading = true;
+                    const url = "http://matuan.online:2422/api/Reviews";
+                    try {
+                        const data = await callApi(url, "GET");
+                        this.reviews = data;
+                        const reviewsData = this.reviews.find((review) => review.movieId === "tt0012349");
+
+                        if (reviewsData) {
+                            this.reviews = reviewsData.items;
+                        }
+                    } catch (error) {
+                        this.error = error;
+                        console.error("Có lỗi xảy ra khi lấy dữ liệu:", error);
+                    } finally {
+                        this.loading = false;
+                    }
                 },
-                
+            },
+            watch: {
+                searchQuery() {
+                    this.searchMoviesReplace();
+                }
             },
             router
         });
