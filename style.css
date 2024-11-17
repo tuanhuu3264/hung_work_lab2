@@ -23,13 +23,20 @@
 .carousel-control-prev-icon,
 .carousel-control-next-icon {
   filter: invert(1);
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 5;
 }
-.carousel-item {
-  position: relative;
+.carousel-control-prev {
+  left: -40px;
+}
+.carousel-control-next {
+  right: -40px;
 }
 
-.carousel-item img {
-  object-fit: cover;
+.carousel-item {
+  position: relative;
 }
 
 .movie-overlay {
@@ -37,7 +44,7 @@
   top: 80%;
   left: 50%;
   transform: translate(-50%, -50%);
-  color: yellow;
+  color: #b69c5a;
   text-align: center;
   z-index: 2;
 }
@@ -46,35 +53,30 @@
 }
 .top-rating-caursol-inner {
   display: flex;
-  flex-wrap: nowrap;
-  padding: 0;
 }
 .top-rating-caursol-item {
   flex: 1 1 auto;
-  margin: 5px;
-  padding: 5px;
-}
-.top-rating-movie-item {
-  margin-right: 0;
+  width: "wrap-content";
+  height: "wrap-content";
+  margin: 0px 5px;
 }
 .top-rating-movie-item img {
-  width: 38vh;
-  height: 28vh;
-  object-fit: cover;
+  width: 350px;
+  height: 250px;
   transition: all 0.3s ease-in-out;
-  border: 1px solid black;
+  border: 1px solid #141414;
   border-radius: 2%;
 }
 .movie-info-popup {
   width: 100%;
   padding: 10px;
-  background: rgba(0, 0, 0, 0.8);
-  color: white;
-  font-size: 16px;
-  text-align: center;
+  background: #141414;
+  color: #4a4a4e;
+  font-size: 14px;
+  padding: 5px;
   font-weight: bold;
   opacity: 0;
-  border: 1px solid black;
+  border: 1px solid #141414;
   border-radius: 2%;
   transform: translateY(-100%);
   transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
@@ -87,11 +89,6 @@
 .top-rating-movie-item:hover img {
   transform: scale(1.1);
 }
-.top-rating-caursol-inner {
-  display: flex;
-  padding: 10px;
-}
-
 ////
 body.light-mode {
   background-color: #f8f9fa;
@@ -198,4 +195,8 @@ input:checked + .slider:before {
   background-color: #281010;
   color: #c7807e;
   border: 1px solid #c7807e;
+}
+.revenueItemImg{
+  witdh:600px;
+  height:800px;
 }
