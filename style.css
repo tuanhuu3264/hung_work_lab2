@@ -41,16 +41,16 @@
 
 .movie-overlay {
   position: absolute;
-  top: 88%;
+  top: 80%;
   left: 50%;
   transform: translate(-50%, -50%);
-  font-size: 20px;
+  font-size: 16px;
   color: #e6a752;
   text-align: center;
   z-index: 2;
 }
 ..movie-overlay h4 {
-  font-size: 24px;
+  font-size: 18px;
   font-weight: bold;
 }
 .title-caursol {

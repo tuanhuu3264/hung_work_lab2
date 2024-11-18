@@ -138,9 +138,35 @@ export const HomePage = {
       try {
         const data = await callApi(url, "GET");
         this.movies = data;
-        this.topRevenueMovies = this.movies.map((movie) => ({...movie, genre: movie.genreList.map((genre) => genre.value).join(", ")}))
-          .sort((a, b) => a.imDbRatingCount - b.imDbRatingCount)
+        console.log(this.movies);
+        this.topRevenueMovies = this.movies
+          .map((movie) => ({
+            ...movie,
+            genre: movie.genreList
+              ? movie.genreList.map((genre) => genre.value).join(", ")
+              : "",
+          }))
+          .filter(
+            (movie) =>
+              movie.boxOffice &&
+              movie.boxOffice.cumulativeWorldwideGross &&
+              movie.boxOffice.cumulativeWorldwideGross !== undefined
+          )
+          .sort((a, b) => {
+            const aGross = parseFloat(
+              a.boxOffice.cumulativeWorldwideGross.replace(/[^0-9.-]+/g, "")
+            );
+            const bGross = parseFloat(
+              b.boxOffice.cumulativeWorldwideGross.replace(/[^0-9.-]+/g, "")
+            );
+            return bGross - aGross;
+          })
           .slice(0, 5);
+        console.log(
+          this.topRevenueMovies.map(
+            (movie) => movie.boxOffice.cumulativeWorldwideGross
+          )
+        );
       } catch (error) {
         this.error = error;
         console.error("Có lỗi xảy ra khi lấy dữ liệu:", error);
