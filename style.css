@@ -41,12 +41,17 @@
 
 .movie-overlay {
   position: absolute;
-  top: 80%;
+  top: 88%;
   left: 50%;
   transform: translate(-50%, -50%);
-  color: #b69c5a;
+  font-size: 20px;
+  color: #e6a752;
   text-align: center;
   z-index: 2;
+}
+..movie-overlay h4 {
+  font-size: 24px;
+  font-weight: bold;
 }
 .title-caursol {
   font-weight: bold;
@@ -407,4 +412,35 @@ input:checked + .slider:before {
   flex-direction: row;
   justify-content: space-between;
   gap: 10px;
+}
+.loader {
+  border: 16px solid #f3f3f3;
+  border-top: 16px solid #3498db;
+  border-radius: 50%;
+  width: 120px;
+  height: 120px;
+  animation: spin 2s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+.loading-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  width: 100%;
+}
+.pagination-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  margin-top: 20px;
 }

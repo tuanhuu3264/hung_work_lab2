@@ -20,8 +20,11 @@ export const HomePage = {
   },
   template: ` <div class="container-body">
                 <div>
-                <div v-if="loading">Loading...</div>
-                <div v-else-if="error">{{ error }}</div>
+                <div v-if="error">{{ error }}</div>
+                <div v-if="loading" class="loading-container">
+                <div class="loader"></div>
+                </div>
+                <div v-else>
                 <div id="movieCarousel" class="carousel slide" data-ride="carousel">
                     <div class="carousel-inner">
                         <div class="carousel-item" v-for="(movie, index) in topRevenueMovies" :class="{ active: index === 0 }"
@@ -92,6 +95,7 @@ export const HomePage = {
                         <span class="sr-only">Next</span>
                     </a>
                 </div>
+              </div>
             </div>`,
   methods: {
     chunkMovies(array) {
@@ -134,7 +138,7 @@ export const HomePage = {
       try {
         const data = await callApi(url, "GET");
         this.movies = data;
-        this.topRevenueMovies = this.movies
+        this.topRevenueMovies = this.movies.map((movie) => ({...movie, genre: movie.genreList.map((genre) => genre.value).join(", ")}))
           .sort((a, b) => a.imDbRatingCount - b.imDbRatingCount)
           .slice(0, 5);
       } catch (error) {

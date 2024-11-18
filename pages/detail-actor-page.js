@@ -1,8 +1,9 @@
 export const DetailActorPage = {
   template: `
     <div class="container-body">
-      <div>
-        <div v-if="loading">Loading...</div>
+        <div v-if="loading" class="loading-container">
+        <div class="loader"></div>
+        </div>
         <div v-else-if="error">{{ error }}</div>
         <div v-else>
           <h2>General Information</h2>
@@ -39,7 +40,6 @@ export const DetailActorPage = {
             </div>
           </div>
         </div>
-      </div>
     </div>
   `,
   data() {

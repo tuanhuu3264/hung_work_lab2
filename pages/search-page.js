@@ -1,27 +1,35 @@
 export const SearchPage = {
   template: `
              <div class="container-body container">
+                <div v-if="error">{{ error }}</div>
+                <div v-if="loading" class="loading-container">
+                <div class="loader"></div>
+                </div>
+                <div v-else> 
                 <div class="row">
                     <div class="col-12 col-sm-6 col-md-4 col-lg-3 mb-4" v-for="(movie, index) in paginatedMovies" :key="movie.id">
                         <div class="item-search-container" @click="clickMovie(movie.id)">
                             <img :src="movie.image" alt="Movie Image" />
                             <div class="info-card">
                                 <h4>{{ movie.fullTitle }}</h4>
-                                <p>Animation, Adventure, Drama</p>
+                                <p>{{movie.genre}}</p>
                             </div>
                         </div>
                     </div>
                 </div>
                 <div class="pagination-container">
-                    <button :disabled="page === 1" @click="changePage(page - 1)">Prev</button>
+                    <button class="btn-search" :disabled="page === 1" @click="changePage(page - 1)">Prev</button>
                     <span>{{ page }} / {{ totalPages }}</span>
-                    <button :disabled="page === totalPages" @click="changePage(page + 1)">Next</button>
+                    <button class="btn-search" :disabled="page === totalPages" @click="changePage(page + 1)">Next</button>
+                </div>
                 </div>
             </div>
             `,
   data() {
     return {
       movies: [],
+      loading: true,
+      error: null,
       paginatedMovies: [],
       searchQuery: "",
       totalPages: 1,
@@ -70,7 +78,12 @@ export const SearchPage = {
           : this.movies;
       const start = (this.page - 1) * this.per_page;
       const end = start + this.per_page;
-      this.paginatedMovies = filteredMovies.slice(start, end);
+      this.paginatedMovies = filteredMovies
+        .map((v) => ({
+          ...v,
+          genre: v.genreList.map((g) => g.value).join(", "),
+        }))
+        .slice(start, end);
       this.totalPages = Math.ceil(filteredMovies.length / this.per_page);
     },
     changePage(newPage) {
